@@ -1,0 +1,22 @@
+{
+  "name": "my_gulp",
+  "version": "1.0.0",
+  "description": "сборка gulp",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AleFF187/my_gulp.git"
+  },
+  "author": "AleFF",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AleFF187/my_gulp/issues"
+  },
+  "homepage": "https://github.com/AleFF187/my_gulp#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}
