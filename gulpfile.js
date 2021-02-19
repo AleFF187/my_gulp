@@ -15,7 +15,7 @@ let path = {
   },
   // исходники
   src:{
-    html: source_folder + "/*.html",
+    html: [source_folder + "/*.html", "!" + source_folder + "/_*.html"],
     css: source_folder + "/scss/style.scss",
     js: source_folder + "/js/main.js",
     img: source_folder + "/images/**/*.{jpg,png,svg,gif,ico,webp}",
