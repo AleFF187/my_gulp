@@ -3,7 +3,7 @@ let project_folder = 'dist';
 // папка исходников
 let source_folder = 'src';
 
-//! пути
+// пути
 let path = {
   // готовый проект
   build:{
@@ -32,7 +32,6 @@ let path = {
   clean: './' + project_folder + '/',
 }
 
-//! переменные
 let {src, dest} = require('gulp'),
     gulp = require('gulp'),
     browsersync = require('browser-sync').create(),
@@ -42,10 +41,9 @@ let {src, dest} = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     group_media = require('gulp-group-css-media-queries'),
     clean_css = require('gulp-clean-css'),
-    rename = require('gulp-rename'),
-    uglify = require('gulp-uglify-es').default;
+    rename = require('gulp-rename');
 
-//! обновление страницы
+// функция обновления страницы
 function browserSync(){
   browsersync.init({
     server: {
@@ -56,7 +54,7 @@ function browserSync(){
   })
 }
 
-//! обработка html файлов
+// обработка html файлов
 function html() {
   return src(path.src.html)
     // собрать файлы шаблонизатором
@@ -67,7 +65,7 @@ function html() {
     .pipe(browsersync.stream())
 }
 
-//! обработка scss файлов
+// обработка scss файлов
 function css() {
   return src(path.src.css)
     // обработка scss
@@ -102,44 +100,34 @@ function css() {
     .pipe(browsersync.stream())
 }
 
-//! обработка js файлов
+// обработка js файлов
 function js() {
   return src(path.src.js)
     // собрать файлы шаблонизатором
     .pipe(fileinclude())
-    // перерасываем обработанный файл не сжатым в папку с готовым проектом
-    // цель получить второй не сжатый файл для удобства чтения заказчиком
-    .pipe(dest(path.build.js))
-    //переименование файла в min 
-    .pipe(
-      rename({
-        extname: '.min.js'
-      })
-    )    
     // перебрасываем файлы в папку с готовым проектом
     .pipe(dest(path.build.js))
     // обновляем страницу
     .pipe(browsersync.stream())
 }
 
-//! слежение за файлами
+// слежение за файлами
 function watchFiles() {
   gulp.watch([path.watch.html], html);
   gulp.watch([path.watch.css], css);
   gulp.watch([path.watch.js], js);
 }
 
-//! удаление файлов
+// удаление файлов
 function clean()  {
   return del(path.clean);
 }
 
-//! выполняемые функции
+// выполняемые функции
 let build = gulp.series(clean, gulp.parallel(js, css, html));
-//! функции для слежения
+// функции для слежения
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
-// ! 
 exports.js = js;
 exports.css = css;
 exports.html = html;
