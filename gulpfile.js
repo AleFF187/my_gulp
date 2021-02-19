@@ -36,7 +36,8 @@ let {src, dest} = require('gulp'),
     gulp = require('gulp'),
     browsersync = require('browser-sync').create(),
     fileinclude = require('gulp-file-include'),
-    del = require('del');
+    del = require('del'),
+    scss = require('gulp-sass');
 
 // функция обновления страницы
 function browserSync(){
@@ -60,9 +61,25 @@ function html() {
     .pipe(browsersync.stream())
 }
 
+// обработка scss файлов
+function css() {
+  return src(path.src.css)
+    // обработка scss
+    .pipe(
+      scss({
+        outputStyle: "expanded"
+      })
+    )
+    // перебрасываем файлы в папку с готовым проектом
+    .pipe(dest(path.build.css))
+    // обновляем страницу
+    .pipe(browsersync.stream())
+}
+
 // слежение за файлами
 function watchFiles() {
-  gulp.watch([path.watch.html], html)
+  gulp.watch([path.watch.html], html);
+  gulp.watch([path.watch.css], css);
 }
 
 // удаление файлов
@@ -71,10 +88,11 @@ function clean()  {
 }
 
 // выполняемые функции
-let build = gulp.series(clean, html);
+let build = gulp.series(clean, gulp.parallel(css, html));
 // функции для слежения
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
+exports.css = css;
 exports.html = html;
 exports.build = build;
 exports.watch = watch;
