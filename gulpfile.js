@@ -40,7 +40,8 @@ let {src, dest} = require('gulp'),
     scss = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     group_media = require('gulp-group-css-media-queries'),
-    clean_css = require('gulp-clean-css');
+    clean_css = require('gulp-clean-css'),
+    rename = require('gulp-rename');
 
 // функция обновления страницы
 function browserSync(){
@@ -82,9 +83,18 @@ function css() {
         cascade: true
       })
     )
+    // перерасываем обработанный файл не сжатым в папку с готовым проектом
+    // цель получить второй не сжатый файл для удобства чтения заказчиком
+    .pipe(dest(path.build.css))
     // очистка (?) и сжатие css
     .pipe(clean_css())
-    // перебрасываем файлы в папку с готовым проектом
+    //переименование файла в min 
+    .pipe(
+      rename({
+        extname: '.min.css'
+      })
+    )
+    // перебрасываем файл в папку с готовым проектом
     .pipe(dest(path.build.css))
     // обновляем страницу
     .pipe(browsersync.stream())
