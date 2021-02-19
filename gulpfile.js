@@ -100,10 +100,22 @@ function css() {
     .pipe(browsersync.stream())
 }
 
+// обработка js файлов
+function js() {
+  return src(path.src.js)
+    // собрать файлы шаблонизатором
+    .pipe(fileinclude())
+    // перебрасываем файлы в папку с готовым проектом
+    .pipe(dest(path.build.js))
+    // обновляем страницу
+    .pipe(browsersync.stream())
+}
+
 // слежение за файлами
 function watchFiles() {
   gulp.watch([path.watch.html], html);
   gulp.watch([path.watch.css], css);
+  gulp.watch([path.watch.js], js);
 }
 
 // удаление файлов
@@ -112,10 +124,11 @@ function clean()  {
 }
 
 // выполняемые функции
-let build = gulp.series(clean, gulp.parallel(css, html));
+let build = gulp.series(clean, gulp.parallel(js, css, html));
 // функции для слежения
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
+exports.js = js;
 exports.css = css;
 exports.html = html;
 exports.build = build;

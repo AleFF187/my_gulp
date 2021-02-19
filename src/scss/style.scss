@@ -1,0 +1,10 @@
+body{
+  font-size: 10px;
+  display: flex;
+  @media (max-width: 800px) {
+    font-size: 30px;
+    display: block;
+  }
+}
+
+
