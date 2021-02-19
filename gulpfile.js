@@ -35,7 +35,8 @@ let path = {
 let {src, dest} = require('gulp'),
     gulp = require('gulp'),
     browsersync = require('browser-sync').create(),
-    fileinclude = require('gulp-file-include');
+    fileinclude = require('gulp-file-include'),
+    del = require('del');
 
 // функция обновления страницы
 function browserSync(){
@@ -64,7 +65,14 @@ function watchFiles() {
   gulp.watch([path.watch.html], html)
 }
 
-let build = gulp.series(html);
+// удаление файлов
+function clean()  {
+  return del(path.clean);
+}
+
+// выполняемые функции
+let build = gulp.series(clean, html);
+// функции для слежения
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 exports.html = html;
