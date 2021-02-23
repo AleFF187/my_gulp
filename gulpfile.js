@@ -43,7 +43,8 @@ let {src, dest} = require('gulp'),
     group_media = require('gulp-group-css-media-queries'),
     clean_css = require('gulp-clean-css'),
     rename = require('gulp-rename'),
-    uglify = require('gulp-uglify-es').default;
+    uglify = require('gulp-uglify-es').default,
+    imagemin = require('gulp-imagemin');
 
 //! функция обновления страницы
 function browserSync(){
@@ -124,11 +125,30 @@ function js() {
     .pipe(browsersync.stream())
 }
 
+//! обработка изображений
+function images() {
+  return src(path.src.img)
+    // обработка изображений
+    .pipe(
+      imagemin({
+        progressive: true,
+        svgoPlugins: [{ removeViewBox : false}],
+        interlaced: true,
+        optimizationLevel: 3 // от 0 до 7
+      })
+    )
+    // перебрасываем файлы в папку с готовым проектом
+    .pipe(dest(path.build.img))
+    // обновляем страницу
+    .pipe(browsersync.stream())
+}
+
 //! слежение за файлами
 function watchFiles() {
   gulp.watch([path.watch.html], html);
   gulp.watch([path.watch.css], css);
   gulp.watch([path.watch.js], js);
+  gulp.watch([path.watch.img], images);
 }
 
 //! удаление файлов
@@ -137,11 +157,12 @@ function clean()  {
 }
 
 //! выполняемые функции
-let build = gulp.series(clean, gulp.parallel(js, css, html));
+let build = gulp.series(clean, gulp.parallel(js, css, html, images));
 //! функции для слежения
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 //! ?????
+exports.images = images;
 exports.js = js;
 exports.css = css;
 exports.html = html;
